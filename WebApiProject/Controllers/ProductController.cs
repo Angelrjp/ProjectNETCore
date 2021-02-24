@@ -22,6 +22,7 @@ namespace WebApiProject.Controllers
             return Products.Single(x => x.Id == id);
         }
 
+        [HttpPost]
         public ActionResult Create(Product model)
         {
             model.Id = Products.Count() + 1;
@@ -32,6 +33,24 @@ namespace WebApiProject.Controllers
                 new { id = model.Id },
                 model
                 );
+        }
+
+        [HttpPut("{productId}")]
+        public ActionResult Update(int productId, Product model)
+        {
+            var originalEntry = Products.Single(x => x.Id == productId);
+            originalEntry.Name = model.Name;
+            originalEntry.Price = model.Price;
+            originalEntry.Description = model.Description;
+
+            return NoContent();
+        }
+
+        [HttpDelete("{productId}")]
+        public ActionResult Delete(int productId)
+        {
+            Products = Products.Where(x => x.Id != productId).ToList();
+            return NoContent();
         }
 
         private static List<Product> Products = new List<Product>
